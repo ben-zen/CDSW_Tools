@@ -1,5 +1,7 @@
+# Copyright (C) 2015 Ben Lewis
+# Licensed under the MIT license
 # Tool for generating useful sets of accepted/declined CDSW applicants, and then
-# exporting them to a file for later usage.
+# exporting them to a file for later use.
 
 import argparse
 import os

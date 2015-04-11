@@ -1,3 +1,5 @@
+# Copyright (C) 2015 Ben Lewis
+# Licensed under the MIT license
 # Tool for checking if an applicant (using their email address) was accepted to
 # a CDSW session, based on the session file.
 
