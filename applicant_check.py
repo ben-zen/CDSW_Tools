@@ -28,7 +28,7 @@ data_file.close()
 
 if args.ApplicantAddress in student_data["accepted"]:
     print("Accepted!")
-elif args.ApplicantAddress in student_data["declined"]:
-    print("Declined from this session.")
+elif args.ApplicantAddress in student_data["waitlisted"]:
+    print("Waitlisted for this session.")
 else:
     print("Not in the file for this session.")

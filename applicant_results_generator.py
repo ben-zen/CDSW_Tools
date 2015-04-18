@@ -25,7 +25,7 @@ print(output_name)
 
 student_data = {}
 student_data["accepted"] = set()
-student_data["declined"] = set()
+student_data["waitlisted"] = set()
 
 # Before we actually open the source file, better to check that it's valid.
 if not os.path.isfile(args.SourceFile):
@@ -43,10 +43,11 @@ with open(args.SourceFile, "r") as applicants :
     for line in applicants:
         email,accepted_state = line.split("\t")
         email.strip()
-        if accepted_state == "Yes\n" : # The newline is from the TSV.
-            student_data["accepted"].add(email)
-        else:
-            student_data["declined"].add(email)
+        if ("@" in email):
+            if accepted_state == "Yes\n" : # The newline is from the TSV.
+                student_data["accepted"].add(email)
+            else:
+                student_data["waitlisted"].add(email)
 
 out_file = open(output_name, 'wb')
 
@@ -57,7 +58,7 @@ out_file.close()
 summary_statistics = {
     "Name" : args.SessionName,
     "AcceptedStudents" : len(student_data["accepted"]),
-    "DeclinedStudents" : len(student_data["declined"])
+    "WaitlistedStudents" : len(student_data["waitlisted"])
 }
 
 summary_wording = """
@@ -65,7 +66,7 @@ Summary
 -------
 Session: %(Name)s
 # of students accepted: %(AcceptedStudents)d
-# of students declined: %(DeclinedStudents)d
+# of students waitlisted: %(WaitlistedStudents)d
 """
 
 print(summary_wording % summary_statistics)
