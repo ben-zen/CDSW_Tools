@@ -43,6 +43,7 @@ with open(args.SourceFile, "r") as applicants :
     for line in applicants:
         email,accepted_state = line.split("\t")
         email.strip()
+        email = email.lower()
         if ("@" in email):
             if accepted_state == "Yes\n" : # The newline is from the TSV.
                 student_data["accepted"].add(email)
