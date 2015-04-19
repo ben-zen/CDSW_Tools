@@ -1,0 +1,4 @@
+doc-warnings: yes
+max-line-length: 80
+pep8:
+    full: true
