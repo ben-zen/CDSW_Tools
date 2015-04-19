@@ -98,6 +98,20 @@ class PreexistingAttendeeException(Exception):
     def __init__(self, email):
         self.EmailAddress = email
 
+class MissingAddressException(Exception):
+
+    """Used when an address is not found in the waitlist."""
+
+    def __init__(self, email):
+        self.EmailAddress = email
+
+class PreexistingAddressException(Exception):
+
+    """Used when an address is already found on the waitlist."""
+
+    def __init__(self, email):
+        self.EmailAddress = email
+
 class Workshop:
 
     """Stores all attendees and generates metrics for a CDSW session.
@@ -107,10 +121,13 @@ class Workshop:
 
     Members:
     Attendees -- Dictionary of attendees, using email addresses as primary keys.
+    Waitlist  -- Set of waitlisted applicants; an applicant can be promoted to
+                 Attendee status.
     """
 
     def __init__(self):
         self.Attendees = {}
+        self.Waitlist = set()
 
     def Find_attendee(self, email):
         """Searches for an attendee in the dictionary.
@@ -138,6 +155,37 @@ class Workshop:
             self.Attendees[email] = Attendee(email)
         else:
             raise PreexistingAttendeeException(email)
+
+    def Add_to_waitlist(self, email):
+        """Add an applicant to the waitlist for this Workshop session.
+
+        Checks the waitlist first to make sure that the applicant is not already
+        on the waitlist; if they are, raises a PreexistingAddressException.
+
+        Keyword arguments:
+        email -- Email address for the waitlist.
+        """
+        if email not in self.Waitlist:
+            self.Waitlist.add(email)
+        else:
+            raise PreexistingAddressException(email)
+
+    def Promote_from_waitlist(self, email):
+        """Move an applicant from the waitlist to the attendee list.
+
+        This method first checks that the provided address is in the waitlist,
+        then removes it from the waitlist and adds an Attendee for that object
+        to Attendees.  If the address is not found in the waitlist, this method
+        raises a MissingAddressException.
+
+        Keyword arguments:
+        email -- Email address for lookup and Attendee creation.
+        """
+        if email in self.Waitlist:
+            self.Waitlist.remove(email)
+            self.Add_attendee(email)
+        else:
+            raise MissingAddressException(email)
 
     def Show_attendance_by_session(self, day):
         """Compute how many attendees signed in to each session on a day.
