@@ -2,8 +2,13 @@
 # Licensed under the MIT license.
 
 class DoubleWriteException(Exception):
-    """Thrown when a second write is attempted to the same item in one of an
-    Attendee object's lists.
+
+    """Thrown by a second attempt to write to a given field.
+
+    Each element in an Attendee's Lectures and Sessions lists can only be
+    written to once, and the only writes are setting a location in the Lectures
+    array to True or a Sessions value to something other than the empty string.
+    On an attempted second write, this exception is thrown.
 
     Members:
     EmailAddress -- Identifier of the throwing Attendee
@@ -20,6 +25,7 @@ class DoubleWriteException(Exception):
             self.Session = session
 
 class Attendee:
+
     """A log of an attendee's presence at various elements of the CDSW.
 
     Members:
@@ -32,48 +38,60 @@ class Attendee:
     """
 
     def __init__(self, email):
+
         """Setup method for the Attendee object.
 
         Keyword arguments:
         email -- The identifier for the attendee, for lookup and comparison.
         """
+
         self.EmailAddress = email
         self.Lectures = [False, False, False, False]
         self.Sessions = ["", "", "", ""]
 
     def Lecture_sign_in(self, day):
-        """Sign-in function for a lecture on a given day of the workshop.  This
-        will throw an exception if called more than once for a given day.
+
+        """Sign-in function for a lecture on a given day of the workshop.
+
+        Each attendee can sign in at most once for that mornings' lecture;
+        any furtherr attempt to sign in will throw a DoubleWriteException.
 
         Keyword arguments:
         day -- The day of the workshop (ordinal, not date.)
         """
+
         if not self.Lectures[day]:
             self.Lectures[day] = True
         else:
             raise DoubleWriteException(self.EmailAddress, day)
 
     def Session_sign_in(self, day, session):
-        """Sign-in function for afternoon sessions on a given day of the
-        workshop. If more than one login is attempted on a particular day, this
-        throws an exception.
+
+        """Sign-in method for afternoon Workshop sessions.
+
+        Each day of the workshop, an attendee can sign in to at most one
+        session.  Any further attempt to sign in to a session will throw a
+        DoubleWriteException.
 
         Keyword arguments:
         day     -- The day of the workshop (ordinal, not date.)
         session -- The name of the session attended.
         """
+
         if self.Sessions[day] is "":
             self.Sessions[day] = session
         else:
             raise DoubleWriteException(self.EmailAddress, day, session)
 
 class MissingAttendeeException(Exception):
+
     """Used when a call that needs an attendee fails to locate one."""
 
     def __init__(self, email):
         self.EmailAddress = email
 
 class PreexistingAttendeeException(Exception):
+
     """Represents attempting to create an attendee that already exists."""
 
     def __init__(self, email):
