@@ -5,7 +5,8 @@ pep8:
     full: true
 pylint:
     disable:
-      - old-style-class
       - bad-whitespace
       - invalid-name
+      - missing-super-argument
+      - old-style-class
       - superfluous-parens

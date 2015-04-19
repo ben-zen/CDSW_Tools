@@ -11,8 +11,11 @@ import sys
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("SessionFile", help="The file used to check if an e-mail address was present.")
-parser.add_argument("ApplicantAddress", help="The e-mail address being checked.")
+parser.add_argument("SessionFile",
+                    help=("The file used to check if an e-mail"
+                          " address was present."))
+parser.add_argument("ApplicantAddress",
+                    help="The e-mail address being checked.")
 
 args = parser.parse_args()
 
@@ -33,5 +36,6 @@ try:
         print("Accepted!")
     else:
         print("Waitlisted for this session.")
-except ma as MissingAddressException:
-    print("The email address {0} was not found in the session.".format(ma.EmailAddress))
+except cdsw.MissingAddressException as ma:
+    print("The email address {0} was not found in the session."
+              .format(ma.EmailAddress))
