@@ -28,6 +28,7 @@ class DoubleWriteException(Exception):
     """
 
     def __init__(self, email, day, session = None):
+        super().__init__()
         self.EmailAddress = email
         self.Day = day
         self.Session = session
@@ -90,6 +91,7 @@ class MissingAttendeeException(Exception):
     """Used when a call that needs an attendee fails to locate one."""
 
     def __init__(self, email):
+        super().__init__()
         self.EmailAddress = email
 
 class PreexistingAttendeeException(Exception):
@@ -97,6 +99,7 @@ class PreexistingAttendeeException(Exception):
     """Represents attempting to create an attendee that already exists."""
 
     def __init__(self, email):
+        super().__init__()
         self.EmailAddress = email
 
 class MissingAddressException(Exception):
@@ -104,6 +107,7 @@ class MissingAddressException(Exception):
     """Used when an address is not found in the waitlist."""
 
     def __init__(self, email):
+        super().__init__()
         self.EmailAddress = email
 
 class PreexistingAddressException(Exception):
@@ -111,6 +115,7 @@ class PreexistingAddressException(Exception):
     """Used when an address is already found on the waitlist."""
 
     def __init__(self, email):
+        super().__init__()
         self.EmailAddress = email
 
 class ApplicantStatus(Enum):

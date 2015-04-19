@@ -4,6 +4,7 @@
 # a CDSW session, based on the session file.
 
 import argparse
+import cdsw
 import os
 import pickle
 import sys
@@ -23,12 +24,14 @@ elif not os.access(args.SessionFile, os.R_OK):
     sys.exit(os.EX_IOERR)
 
 data_file = open(args.SessionFile, "rb")
-student_data = pickle.load(data_file)
+session_data = pickle.load(data_file)
 data_file.close()
 
-if args.ApplicantAddress in student_data["accepted"]:
-    print("Accepted!")
-elif args.ApplicantAddress in student_data["waitlisted"]:
-    print("Waitlisted for this session.")
-else:
-    print("Not in the file for this session.")
+try:
+    applicant_status = session_data.Get_applicant_status(args.ApplicantAddress)
+    if applicant_status is cdsw.ApplicantStatus.Accepted:
+        print("Accepted!")
+    else:
+        print("Waitlisted for this session.")
+except ma as MissingAddressException:
+    print("The email address {0} was not found in the session.".format(ma.EmailAddress))
