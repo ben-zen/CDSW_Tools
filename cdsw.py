@@ -8,6 +8,8 @@ gauge continued involvement and interest.
 # Copyright (C) 2015 Ben Lewis
 # Licensed under the MIT license.
 
+from enum import Enum
+
 class DoubleWriteException(Exception):
 
     """Thrown by a second attempt to write to a given field.
@@ -28,8 +30,7 @@ class DoubleWriteException(Exception):
     def __init__(self, email, day, session = None):
         self.EmailAddress = email
         self.Day = day
-        if session is not None:
-            self.Session = session
+        self.Session = session
 
 class Attendee:
 
@@ -112,6 +113,13 @@ class PreexistingAddressException(Exception):
     def __init__(self, email):
         self.EmailAddress = email
 
+class ApplicantStatus(Enum):
+
+    """Enumeration of Workshop applicant states."""
+
+    Accepted = 1
+    Waitlisted = 2
+
 class Workshop:
 
     """Stores all attendees and generates metrics for a CDSW session.
@@ -186,6 +194,25 @@ class Workshop:
             self.Add_attendee(email)
         else:
             raise MissingAddressException(email)
+
+    def Get_applicant_status(self, email):
+        """Check if an applicant is accepted or waitlisted.
+
+        This method first checks the attendee list, then checks the waitlist.
+        If the supplied email address is not found, raises a
+        MissingAddressException.
+
+        Keyword arguments:
+        email -- Email address for lookup.
+        """
+        status = None
+        if email in self.Attendees:
+            status = ApplicantStatus.Accepted
+        elif email in self.Waitlist:
+            status = ApplicantStatus.Waitlisted
+        else:
+            raise MissingAddressException(email)
+        return status
 
     def Show_attendance_by_session(self, day):
         """Compute how many attendees signed in to each session on a day.
