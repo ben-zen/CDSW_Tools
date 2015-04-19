@@ -1,8 +1,11 @@
 doc-warnings: yes
-strictness: veryhigh
+strictness: high
 max-line-length: 80
 pep8:
     full: true
 pylint:
     disable:
       - old-style-class
+      - bad-whitespace
+      - invalid-name
+      - superfluous-parens
