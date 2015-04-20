@@ -158,16 +158,22 @@ class Workshop:
     def Add_attendee(self, email):
         """Add an attendee to the workshop, using their email address as key.
 
-        If the email address is already present in the dictionary, this method
-        raises a PreexistingAttendeeException.
+        If the email address is already present in the list of
+        attendees or is on the waitlist, this method raises a
+        PreexistingAddressException. If the address is on the
+        waitlist, it will print a message reminding the user to call
+        Promote_from_waitlist() instead.
 
         Keyword arguments:
         email -- Email address for lookup and Attendee creation.
         """
-        if email not in self.Attendees:
+        if (email not in self.Attendees) and (email not in self.Waitlist):
             self.Attendees[email] = Attendee(email)
         else:
-            raise PreexistingAttendeeException(email)
+            if email in self.Waitlist:
+                print("Call Promote_from_waitlist() to move an applicant from "
+                  "the waitlist.")
+            raise PreexistingAddressException(email)
 
     def Add_to_waitlist(self, email):
         """Add an applicant to the waitlist for this Workshop session.
